@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>chat client</title>
+    <script src="https://cdn.socket.io/4.8.1/socket.io.min.js" integrity="sha384-mkQ3/7FUtcGyoppY6bz/PORYoGqOl7/aSUMn2ymDOJcapfS6PHqxhRTMh1RR0Q6+" crossorigin="anonymous"></script>
+</head>
+<body>
+    <script>
+        let randomNumber = Math.floor(Math.random() * 5);
+                // 페이지 로드 시 실행
+        window.onload = function () {
+            const inputElement = document.getElementById("myName");
+            if (inputElement) {
+                inputElement.value = `user-${randomNumber}`; // 랜덤 값을 input에 설정
+            }
+        };
+        let socket;
+        async function join(type = '1:1') {
+            const url = `http://localhost:8080/join`;
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    myName: document.getElementById('myName').value,
+                    partnerNames: document.getElementById('partnerNames').value.split(',')
+                }),
+            });
+            const socketUrl = await response.text();
+            socket = io(socketUrl); 
+            
+            socket.on('connect', () => {
+                console.log('Socket.IO 연결됨');
+            });
+
+            socket.on('receiveMessage', (data) => {
+                document.getElementById('chat').value += data + '\n';
+                console.log('Socket.IO 데이터 수신:', data);
+            });
+
+            socket.on('disconnect', () => {
+                console.log('Socket.IO 연결 끊김');
+            });
+        }
+
+        async function sendMessage() {
+            socket.emit('sendMessage', document.getElementById('message').value);
+        }
+
+    </script>
+    <textarea id="chat" rows="10" cols="50"></textarea>
+    <br>
+    <input type="text" id="myName" placeholder="내 이름"></input>
+    <br>
+    <input type="text" id="partnerNames" placeholder="상대방 이름,상대방 이름,상대방 이름,상대방 이름"></input>
+    <input type="button" value="1:1 채팅 / 그룹 채팅 소켓 연결" onclick="join('group')"></input>
+    <br>
+    <input type="text" id="message"/>
+    <input type="button" value="메세지 입력" onclick="sendMessage()"/>
+</body>
+</html>
