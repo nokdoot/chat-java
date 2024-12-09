@@ -1,4 +1,4 @@
-package com.example.chatjava;
+package com.example.chatjava.dto;
 
 import lombok.Getter;
 import lombok.Setter;
