@@ -45,6 +45,9 @@ public class RoomManager {
         });
 
         server.addEventListener("sendMessage", String.class, (client, data, ackSender) -> {
+            if (data.length() > 1000) {
+                return;
+            }
             System.out.println("Received message: " + data);
             server.getAllClients().forEach(c -> {
                 c.sendEvent("receiveMessage", data);
