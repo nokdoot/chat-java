@@ -82,6 +82,9 @@ public class RoomManager {
     }
 
     public Room createRoom(List<String> userNames) {
+        if (userNames.size() > 100) {
+            throw new IllegalArgumentException("Too many users.");
+        }
         String roomName = String.join("-", userNames.stream().sorted().toList());
         Room room;
         if (rooms.containsKey(roomName)) {
