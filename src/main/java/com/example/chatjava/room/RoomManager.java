@@ -16,9 +16,11 @@ public class RoomManager {
 
     private final Map<String, Room> rooms = new HashMap<>();
     private final Publisher publisher;
+    private final LogRepository logRepository;
 
-    public RoomManager(Publisher publisher) {
+    public RoomManager(Publisher publisher, LogRepository logRepository) {
         this.publisher = publisher;
+        this.logRepository = logRepository;
     }
 
     @EventListener
@@ -42,9 +44,8 @@ public class RoomManager {
         if (rooms.containsKey(roomName)) {
             room = rooms.get(roomName);
             System.out.println("Server already exists: " + roomName);
-        }
-        else {
-            room = Room.CreateRoom(roomName, publisher);
+        } else {
+            room = Room.CreateRoom(roomName, publisher, logRepository);
             rooms.put(roomName, room);
         }
         System.out.println("Room created: " + roomName);
