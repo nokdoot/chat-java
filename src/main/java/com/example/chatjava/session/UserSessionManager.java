@@ -1,5 +1,6 @@
-package com.example.chatjava;
+package com.example.chatjava.session;
 
+import com.example.chatjava.event.Publisher;
 import com.example.chatjava.event.UserJoinEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.EnableScheduling;

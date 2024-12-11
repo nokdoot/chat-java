@@ -1,8 +1,5 @@
-package com.example.chatjava;
+package com.example.chatjava.event;
 
-import com.example.chatjava.event.UserJoinEvent;
-
-import com.example.chatjava.event.UserLeaveEvent;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 

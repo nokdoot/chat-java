@@ -4,6 +4,9 @@ import com.example.chatjava.dto.UserJoinResponse;
 import com.example.chatjava.dto.UserJoinRequest;
 
 import com.example.chatjava.dto.UserPingRequest;
+import com.example.chatjava.room.Room;
+import com.example.chatjava.room.RoomManager;
+import com.example.chatjava.session.UserSessionManager;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,17 +27,17 @@ public class Controller {
     @PostMapping(value = "/join", produces = "application/json")
     public ResponseEntity<UserJoinResponse> joinOneOnOne(@RequestBody
     UserJoinRequest userJoinRequest) {
-        Room room = this.roomManager.createRoom(Stream.concat(
-                Stream.of(userJoinRequest.getMyName()),
-                userJoinRequest.getPartnerNames().stream()
+        Room room = this.roomManager.joinRoom(Stream.concat(
+                Stream.of(userJoinRequest.myName()),
+                userJoinRequest.partnerNames().stream()
         ).toList());
-        return ResponseEntity.ok(new UserJoinResponse("http://localhost:" + room.port(), room.name()));
+        return ResponseEntity.ok(new UserJoinResponse("http://localhost:" + room.getPort(), room.getName()));
     }
 
     @PostMapping(value = "/ping", produces = "application/json")
     public void ping(@RequestBody
             UserPingRequest userPingRequest) {
-        this.userSessionManager.userPing(userPingRequest.getMyName(), userPingRequest.getRoomName());
+        this.userSessionManager.userPing(userPingRequest.myName(), userPingRequest.roomName());
     }
 
 

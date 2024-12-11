@@ -1,4 +1,4 @@
-package com.example.chatjava;
+package com.example.chatjava.session;
 
 import java.util.Date;
 
