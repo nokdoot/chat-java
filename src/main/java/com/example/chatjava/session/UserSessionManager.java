@@ -1,6 +1,6 @@
 package com.example.chatjava.session;
 
-import com.example.chatjava.event.Publisher;
+import com.example.chatjava.event.EventPublisher;
 import com.example.chatjava.event.UserJoinEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -14,10 +14,10 @@ import java.util.*;
 public class UserSessionManager {
     private final Map<String, Set<UserSession>> userSessions = new HashMap<>();
 
-    private final Publisher publisher;
+    private final EventPublisher eventPublisher;
 
-    public UserSessionManager(Publisher publisher) {
-        this.publisher = publisher;
+    public UserSessionManager(EventPublisher eventPublisher) {
+        this.eventPublisher = eventPublisher;
     }
 
     @EventListener
@@ -46,7 +46,7 @@ public class UserSessionManager {
                 boolean isExpired = now.getTime() - userSession.lastSeen().getTime() > 2_000;
                 if (isExpired) {
                     System.out.printf("User %s left room %s%n", roomName, userSession.roomName());
-                    this.publisher.userLeave(userSession.roomName(), userSession.sessionId());
+                    this.eventPublisher.userLeave(userSession.roomName(), userSession.sessionId());
                 }
                 return isExpired;
             });

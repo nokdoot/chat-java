@@ -1,7 +1,7 @@
 package com.example.chatjava.room;
 
 import com.corundumstudio.socketio.SocketIOClient;
-import com.example.chatjava.event.Publisher;
+import com.example.chatjava.event.EventPublisher;
 import com.example.chatjava.event.UserLeaveEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
@@ -15,11 +15,11 @@ import java.util.UUID;
 public class RoomManager {
 
     private final Map<String, Room> rooms = new HashMap<>();
-    private final Publisher publisher;
+    private final EventPublisher eventPublisher;
     private final LogRepository logRepository;
 
-    public RoomManager(Publisher publisher, LogRepository logRepository) {
-        this.publisher = publisher;
+    public RoomManager(EventPublisher eventPublisher, LogRepository logRepository) {
+        this.eventPublisher = eventPublisher;
         this.logRepository = logRepository;
     }
 
@@ -45,7 +45,8 @@ public class RoomManager {
             room = rooms.get(roomName);
             System.out.println("Server already exists: " + roomName);
         } else {
-            room = Room.CreateRoom(roomName, publisher, logRepository);
+            room = Room.CreateRoom(roomName,
+                    eventPublisher, logRepository);
             rooms.put(roomName, room);
         }
         System.out.println("Room created: " + roomName);

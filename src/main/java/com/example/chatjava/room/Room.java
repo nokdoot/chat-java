@@ -3,7 +3,7 @@ package com.example.chatjava.room;
 import com.corundumstudio.socketio.Configuration;
 import com.corundumstudio.socketio.SocketIOClient;
 import com.corundumstudio.socketio.SocketIOServer;
-import com.example.chatjava.event.Publisher;
+import com.example.chatjava.event.EventPublisher;
 import lombok.Getter;
 
 import java.util.Date;
@@ -13,17 +13,18 @@ public class Room {
     private final Integer port;
     private final String name;
     private final SocketIOServer server;
-    private final Publisher publisher;
+    private final EventPublisher eventPublisher;
     private final LogRepository logRepository;
 
 
-    public static Room CreateRoom(String name, Publisher publisher, LogRepository logRepository) {
+    public static Room CreateRoom(String name, EventPublisher eventPublisher, LogRepository logRepository) {
         Configuration config = new Configuration();
         int port = SocketUtils.GetAvailablePort();
         config.setPort(port);
         SocketIOServer server = new SocketIOServer(config);
 
-        Room room = new Room(port, name, server, publisher, logRepository);
+        Room room = new Room(port, name, server,
+                eventPublisher, logRepository);
         room.startServer();
         System.out.println("Room created: " + name);
         return room;
@@ -33,12 +34,12 @@ public class Room {
             Integer port,
             String name,
             SocketIOServer server,
-            Publisher publisher,
+            EventPublisher eventPublisher,
             LogRepository logRepository) {
         this.port = port;
         this.name = name;
         this.server = server;
-        this.publisher = publisher;
+        this.eventPublisher = eventPublisher;
         this.logRepository = logRepository;
     }
 
@@ -63,7 +64,7 @@ public class Room {
             client.disconnect();
             return;
         }
-        publisher.userJoin(userName, roomName, client.getSessionId().toString());
+        eventPublisher.userJoin(userName, roomName, client.getSessionId().toString());
         System.out.println("Client connected: " + client.getSessionId());
     }
 

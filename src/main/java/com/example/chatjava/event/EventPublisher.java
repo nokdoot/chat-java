@@ -4,10 +4,10 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
 @Component
-public class Publisher {
+public class EventPublisher {
     private final ApplicationEventPublisher publisher;
 
-    public Publisher(ApplicationEventPublisher publisher) {
+    public EventPublisher(ApplicationEventPublisher publisher) {
         this.publisher = publisher;
     }
 
